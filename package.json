@@ -1,0 +1,46 @@
+{
+  "name": "langchain-thordata",
+  "version": "0.2.0",
+  "description": "JavaScript and TypeScript SDK for the ThorData SERP API and LangChain.js",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "type": "commonjs",
+  "files": [
+    "src",
+    "examples",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check src/index.js && node --check src/langchain.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "thordata",
+    "langchain",
+    "serp",
+    "search",
+    "sdk"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@langchain/core": ">=0.3.0",
+    "zod": ">=3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@langchain/core": {
+      "optional": true
+    },
+    "zod": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@langchain/core": ">=0.3.0",
+    "zod": ">=3.0.0"
+  }
+}
