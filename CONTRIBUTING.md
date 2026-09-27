@@ -1,7 +1,7 @@
 # Contributing
 
 Guidance for maintainers of this repository. The user-facing usage docs live
-in [README.md](./README.md) (简体中文: [README.zh-CN.md](./README.zh-CN.md)).
+in [README.md](./README.md).
 
 ## Live task ID verification (maintainer QA)
 
