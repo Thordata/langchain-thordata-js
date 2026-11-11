@@ -1,6 +1,6 @@
 # LangChain Thordata for JavaScript/TypeScript
 
-Connect [Thordata](https://www.thordata.com/?ls=github01&lk=github01)
+Connect [Thordata](https://www.thordata.com/products/serp-api/langchain-integration?op=flora&from=github)
 SERP to JavaScript, Node.js, and LangChain.js applications for real-time
 search.
 
@@ -214,5 +214,5 @@ task ID QA script described in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Learn more
 
-- [Thordata SERP API](https://www.thordata.com/?ls=github01&lk=github01)
+- [Thordata SERP API](https://www.thordata.com/products/serp-api?op=flora&from=github)
 - [Thordata SERP API documentation](https://doc.thordata.com/doc/scraping/serp-api)
