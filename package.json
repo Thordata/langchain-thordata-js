@@ -1,6 +1,6 @@
 {
   "name": "langchain-thordata",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "JavaScript and TypeScript SDK for the ThorData SERP API and LangChain.js",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "test": "node --test",
-    "check": "node --check src/index.js && node --check src/langchain.js"
+    "check": "node --check src/index.js && node --check src/langchain.js && node --check src/web_scraper.js && node --check src/errors.js"
   },
   "engines": {
     "node": ">=18"

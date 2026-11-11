@@ -50,6 +50,34 @@ export type SearchParams = Record<string, unknown> & {
   isjson?: string | number | boolean;
 };
 
+export type WebScraperId =
+  | "linkedin_company_information_by-url"
+  | "linkedin_job_listings_information_by-job-url"
+  | "youtube_video-post_by-keyword"
+  | "facebook_profile_by-profiles-url"
+  | "youtube_video-post_by-explore"
+  | "twitter_profile_by-profileurl"
+  | "amazon_product_by-category-url";
+
+export type WebScraperParams = Record<string, unknown>;
+
+export interface WebScraperOptions {
+  maxWaitSeconds?: number;
+  includeErrors?: boolean;
+  fileName?: string;
+  signal?: AbortSignal;
+}
+
+export interface WebScraperResponse<T = unknown> {
+  result: T;
+  taskId: string;
+  spiderId: WebScraperId;
+  status: "completed" | "partial" | "empty";
+  recordCount: number;
+  errorRecordCount: number;
+  raw: unknown;
+}
+
 export interface SearchResponse<T = unknown> {
   result: T;
   taskId: string | null;
@@ -74,10 +102,12 @@ export interface ThorDataClientOptions {
 
 export declare const DEFAULT_API_URL: string;
 export declare const DEFAULT_TIMEOUT_MS: number;
+export declare const DEFAULT_MAX_WAIT_SECONDS: number;
 export declare const INTEGRATION_PLATFORM: string;
 export declare const INTEGRATION_SOURCE: string;
 export declare const REQUEST_PARAMETERS: ReadonlySet<string>;
 export declare const SUPPORTED_ENGINES: readonly SearchEngine[];
+export declare const SUPPORTED_WEB_SCRAPERS: readonly WebScraperId[];
 
 export declare class ThorDataError extends Error {}
 export declare class ThorDataConfigurationError extends ThorDataError {}
@@ -103,6 +133,25 @@ export declare class ThorDataRateLimitError extends ThorDataAPIError {}
 export declare class ThorDataInvalidRequestError extends ThorDataAPIError {}
 export declare class ThorDataNotCollectedError extends ThorDataAPIError {}
 
+export interface ThorDataWebScraperErrorOptions {
+  stage?: string;
+  taskId?: string | null;
+  spiderId?: string | null;
+  reason?: unknown;
+  serviceCode?: string | number | null;
+  secrets?: readonly string[];
+}
+
+export declare class ThorDataWebScraperError extends ThorDataError {
+  errorCode: string;
+  stage: string;
+  taskId: string | null;
+  spiderId: string | null;
+  reason: string | null;
+  serviceCode: string | number | null;
+  constructor(errorCode: string, options?: ThorDataWebScraperErrorOptions);
+}
+
 export declare class ThorDataClient {
   readonly apiKey: string;
   readonly apiUrl: string;
@@ -122,6 +171,16 @@ export declare class ThorDataClient {
   searchJson<T = unknown>(params?: SearchParams, options?: RequestOptions): Promise<T>;
   searchResponse<T = unknown>(params?: SearchParams, options?: RequestOptions): Promise<SearchResponse<T>>;
   rawSearch(params?: Record<string, unknown>, options?: RequestOptions): Promise<string>;
+  scrape<T = unknown>(
+    spiderId: WebScraperId,
+    params?: WebScraperParams,
+    options?: WebScraperOptions,
+  ): Promise<T>;
+  scrapeResponse<T = unknown>(
+    spiderId: WebScraperId,
+    params?: WebScraperParams,
+    options?: WebScraperOptions,
+  ): Promise<WebScraperResponse<T>>;
 }
 
 export declare const Client: typeof ThorDataClient;
@@ -144,3 +203,12 @@ export interface ThorDataSearchToolOptions extends ThorDataClientOptions {
 
 export declare function createThorDataSearchTool(options?: ThorDataSearchToolOptions): unknown;
 export declare const ThorDataSearchTool: typeof createThorDataSearchTool;
+
+export interface ThorDataWebScraperToolOptions extends ThorDataClientOptions {
+  client?: ThorDataClient;
+}
+
+export declare function createThorDataWebScraperTool(
+  options?: ThorDataWebScraperToolOptions,
+): unknown;
+export declare const ThorDataWebScraperTool: typeof createThorDataWebScraperTool;

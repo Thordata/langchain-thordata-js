@@ -45,7 +45,7 @@ test("search posts form data to /request and unwraps result", async () => {
     assert.equal(calls[0].init.headers["X-ThorData-Source"], "javascript-sdk");
     assert.equal(calls[0].init.headers.platform, "langchain");
     assert.equal(calls[0].init.headers["api-source"], "javascript-sdk");
-    assert.equal(calls[0].init.headers["User-Agent"], "langchain-thordata-javascript/0.2.0");
+    assert.equal(calls[0].init.headers["User-Agent"], "langchain-thordata-javascript/0.3.0");
     assert.equal(calls[0].init.body.get("engine"), "google");
     assert.equal(calls[0].init.body.get("json"), "1");
     assert.equal(calls[0].init.body.get("isjson"), "1");

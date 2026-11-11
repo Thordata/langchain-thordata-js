@@ -1,6 +1,13 @@
 "use strict";
 
 const { version: PACKAGE_VERSION } = require("../package.json");
+const { ThorDataError } = require("./errors");
+const {
+  DEFAULT_MAX_WAIT_SECONDS,
+  SUPPORTED_WEB_SCRAPERS,
+  ThorDataWebScraperError,
+  runWebScraper,
+} = require("./web_scraper");
 
 const DEFAULT_API_URL = "https://scraperapi.thordata.com/request";
 const DEFAULT_TIMEOUT_MS = 30_000;
@@ -259,13 +266,6 @@ const PARAMETER_ALIASES = Object.freeze({
   country: "gl",
 });
 
-class ThorDataError extends Error {
-  constructor(message, options = {}) {
-    super(message, options);
-    this.name = new.target.name;
-  }
-}
-
 class ThorDataConfigurationError extends ThorDataError {}
 
 class ThorDataConnectionError extends ThorDataError {}
@@ -504,6 +504,63 @@ class ThorDataClient {
     return this._parseResponse(response);
   }
 
+  async scrape(spiderId, params = {}, options = {}) {
+    return (await this.scrapeResponse(spiderId, params, options)).result;
+  }
+
+  async scrapeResponse(
+    spiderId,
+    params = {},
+    {
+      maxWaitSeconds = DEFAULT_MAX_WAIT_SECONDS,
+      includeErrors = true,
+      fileName = "{{TasksID}}",
+      signal,
+      sleep,
+      now,
+    } = {},
+  ) {
+    const request = async (method, url, headers, body, _timeout, requestSignal) => {
+      // Caller credentials and source fields cannot override the fixed endpoint authentication.
+      const blockedHeaders = new Set([
+        "authorization", "proxy-authorization", "sign", "cookie", "cookie2",
+        "api-key", "api_key", "apikey", "x-api-key", "api-source", "api_source", "source_platform",
+      ]);
+      const customHeaders = method === "GET" ? {} : Object.fromEntries(Object.entries(this.headers)
+        .filter(([key]) => !blockedHeaders.has(key.toLowerCase())));
+      const requestHeaders = {
+        ...customHeaders,
+        ...headers,
+        Accept: "application/json",
+        "User-Agent": `langchain-thordata-javascript/${PACKAGE_VERSION}`,
+        "X-ThorData-Platform": INTEGRATION_PLATFORM,
+        "X-ThorData-Source": INTEGRATION_SOURCE,
+        platform: INTEGRATION_PLATFORM,
+      };
+      return fetch(url, {
+        method: String(method).toUpperCase(),
+        headers: requestHeaders,
+        body: String(method).toUpperCase() === "GET" ? undefined : body,
+        signal: requestSignal,
+        redirect: "error",
+      });
+    };
+    return runWebScraper({
+      request,
+      apiKey: this.apiKey,
+      spiderId,
+      params,
+      maxWaitSeconds,
+      includeErrors,
+      fileName,
+      signal,
+      requestTimeout: this.timeout,
+      InvalidError: ThorDataInvalidRequestError,
+      ...(typeof sleep === "function" ? { sleep } : {}),
+      ...(typeof now === "function" ? { now } : {}),
+    });
+  }
+
   _buildSearchPayload(params = {}, overrides = {}) {
     const input = normalizeSearchParams({ ...params, ...overrides });
     const requestedEngine = String(input.engine || "google_search").trim().toLowerCase();
@@ -610,10 +667,12 @@ async function rawSearch(params = {}, options = {}) {
 module.exports = {
   DEFAULT_API_URL,
   DEFAULT_TIMEOUT_MS,
+  DEFAULT_MAX_WAIT_SECONDS,
   INTEGRATION_PLATFORM,
   INTEGRATION_SOURCE,
   REQUEST_PARAMETERS,
   SUPPORTED_ENGINES,
+  SUPPORTED_WEB_SCRAPERS,
   ThorDataAPIError,
   ThorDataAuthenticationError,
   ThorDataClient,
@@ -625,6 +684,7 @@ module.exports = {
   ThorDataPermissionError,
   ThorDataRateLimitError,
   ThorDataTimeoutError,
+  ThorDataWebScraperError,
   Client: ThorDataClient,
   ...require("./langchain"),
   rawSearch,
