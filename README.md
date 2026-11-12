@@ -1,11 +1,18 @@
 # LangChain Thordata for JavaScript/TypeScript
 
-Connect [Thordata](https://www.thordata.com/products/serp-api/langchain-integration?op=flora&from=github)
+Connect [Thordata](https://www.thordata.com/products/serp-api/langchain-integration?op=cianna&from=rename)
 SERP to JavaScript, Node.js, and LangChain.js applications for real-time
 search.
 
 This SDK exposes Thordata SERP and selected Web Scraper capabilities through a
 small JavaScript/TypeScript client and optional LangChain.js tools.
+
+With Thordata as the web-data layer behind your LangChain.js agents, live
+search and structured scraping arrive as clean JSON instead of raw HTML — no
+browser maintenance, no fragile selectors, and one API key for the whole
+pipeline. This SDK is part of Thordata's official
+[LangChain integration](https://www.thordata.com/products/serp-api/langchain-integration?op=cianna&from=rename),
+which also covers setup guides and agent workflow examples.
 
 ## Install
 
@@ -16,6 +23,22 @@ npm install langchain-thordata
 Node.js 18 or newer is required because the client uses the built-in `fetch`.
 Set a normal ThorData SERP API key in `THORDATA_API_KEY` or
 `THORDATA_API_TOKEN`.
+
+### Get your Thordata SERP API key
+
+The SDK needs one Thordata API key for both search and scraping. It takes
+about two minutes to set up:
+
+1. **Create a Thordata account.** Sign up at [https://www.thordata.com/?ls=community&lk=proxyip](https://www.thordata.com/?ls=community&lk=proxyip). New accounts include a SERP API free trial — 5,000 requests over 7 days.
+2. **Open the dashboard.** Log in and go to the [Thordata dashboard](https://www.thordata.com/dashboard).
+3. **Find the API Keys section.** In the dashboard menu, open the **API Keys** page (exact location follows the dashboard layout; if the menu has moved, look under Account or API settings).
+4. **Create and copy your key.** Click **Create API Key** (or **Generate**), name it, and copy the key shown. You will not be able to see it again after closing the dialog, so copy it now.
+5. **Export it as an environment variable.** Set `THORDATA_API_KEY` in your shell or `.env` file as shown above, then construct the client — the client reads the key from the environment.
+
+SERP API pricing starts at 0.70 USD per 1,000 requests. See the
+[LangChain integration guide](https://www.thordata.com/products/serp-api/langchain-integration?op=cianna&from=rename)
+for current plans and the [Thordata documentation](https://doc.thordata.com/doc)
+for the full API reference.
 
 ## Basic search
 
@@ -214,5 +237,6 @@ task ID QA script described in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Learn more
 
-- [Thordata SERP API](https://www.thordata.com/products/serp-api?op=flora&from=github)
-- [Thordata SERP API documentation](https://doc.thordata.com/doc/scraping/serp-api)
+- [Thordata LangChain integration](https://www.thordata.com/products/serp-api/langchain-integration?op=cianna&from=rename) — the official integration guide this SDK is part of, with setup details and agent workflow examples.
+- [Thordata SERP API MCP Server](https://www.thordata.com/products/serp-api/mcp-server?op=cianna&from=mcp) — bring the same live search directly into Claude, Cursor or any MCP-compatible AI assistant.
+- [Thordata SERP API documentation](https://doc.thordata.com/doc/scraping/serp-api) — full API reference: engines, parameters, and response schemas.
